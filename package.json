@@ -1,0 +1,26 @@
+{
+  "name": "RatesApi",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "16.4.1",
+    "react-native": "0.56.0",
+    "react-native-linear-gradient": "^2.4.0",
+    "react-native-round-flags": "^1.0.4",
+    "react-native-vector-icons": "^5.0.0",
+    "react-navigation": "^2.11.2"
+  },
+  "devDependencies": {
+    "babel-jest": "23.4.2",
+    "babel-preset-react-native": "^5",
+    "jest": "23.5.0",
+    "react-test-renderer": "16.4.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
