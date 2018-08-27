@@ -1,6 +1,6 @@
 export default {
   viewStyle: {
-    backgroundColor: 'red',
+    backgroundColor: '#ff0000',
     height: 50,
     shadowColor: '#000',
     shadowOpacity: 0.2,
@@ -27,7 +27,7 @@ export default {
     justifyContent: 'center',
     alignItems: 'center',
     fontSize: 20,
-    color: '#000000',
-    fontStyle: 'italic'
+    color: '#fff',
+    fontFamily: 'Roboto-BoldItalic'
   }
 }

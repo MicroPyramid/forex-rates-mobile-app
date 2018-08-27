@@ -1,5 +1,6 @@
 export const fetch_get = (url) => {
   const ROOT_URL = 'https://ratesapi.io/api/';
+  console.log(ROOT_URL + url)
 	return fetch(ROOT_URL + url,
     {
       method: 'GET',
@@ -12,11 +13,6 @@ export const fetch_get = (url) => {
     return response.json() 
   })  
   .catch((error) => {
+    console.log(error)
   });
 }
-    // if (Platform.OS === 'ios') {
-    //     AlertIOS.alert('Offline', 'Unable to perform this action, Please try again later');
-    //   }
-    //   else {
-    //     ToastAndroid.show('Unable to perform this action, Please try again later', ToastAndroid.LONG);
-    //   }

@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "16.4.1",
     "react-native": "0.56.0",
-    "react-native-linear-gradient": "^2.4.0",
+    "react-native-charts-wrapper": "^0.4.4",
     "react-native-round-flags": "^1.0.4",
     "react-native-vector-icons": "^5.0.0",
     "react-navigation": "^2.11.2"
@@ -22,5 +22,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "/home/madhu/Desktop/RatesApi/android/app/src/main/assets/fonts"
+    ]
   }
 }

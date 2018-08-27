@@ -4,61 +4,11 @@ import { TabNavigator, TabBarBottom } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Rates from './src/components/Rates';
 import Converter from './src/components/Converter';
+import Chart from './src/components/Chart';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
-const backgroundColor = 'red';
-// export const RatesTab = TabNavigator({
-//   Rates: {
-//     screen : Rates,
-//     navigationOptions: {
-//       tabBarLabel: 'Rates',
-//       backgroundColor: 'balck'
-//     }
-//   },
-//   Convert: {
-//     screen: Rates,
-//     navigationOptions: {
-//       tabBarLabel: 'Converter'
-//     }
-//   },
-//   Chart: {
-//     screen: Rates,
-//     navigationOptions: {
-//       tabBarLabel: 'Chart'
-//     }
-//   },
-// },
-//   {
-//     tabBarPosition: 'bottom',
-//     tabBarComponent : TabBarBottom,
-//   },
-//   {
-//     tabBarOptions: {
-//       activeTintColor: 'white',  // Color of tab when pressed
-//       inactiveTintColor: 'red',
-//       // inactiveTintColor: '#000000',
-//       showIcon: false,
-//       showLabel: 'true',
-//       labelStyle: {
-//         fontSize: 16,
-//         paddingBottom: 15
-//       },
-//       style: {
-//         backgroundColor: 'black',
-//         color: 'white',
-//       },
-//       indicatorStyle: {
-//         width: 1,
-//         color: '#000000',
-//         backgroundColor: 'black'
-//       },
-//       tabStyle: {
-//         width: 500
-//       },
-//     }
-//   }
-// );
+const backgroundColor = '#ff0000';
 
 export const RatesTab = TabNavigator(
   {
@@ -77,7 +27,7 @@ export const RatesTab = TabNavigator(
       },
     },
     Tab3: {
-      screen: Rates,
+      screen: Chart,
       navigationOptions: {
         title: 'Chart',
         tabBarIcon: ({ tintColor }) => (<Icon name='line-chart' size={20} color={tintColor} />)
@@ -87,11 +37,6 @@ export const RatesTab = TabNavigator(
   {
     lazy: true,
     tabBarComponent: props => {
-      // #f00000
-      // const backgroundColor = props.position.interpolate({
-      //   inputRange: [0, 1, 2],
-      //   outputRange: ['orange', 'white', 'green'],
-      // })
       return (
         <TabBarBottom
           {...props}
@@ -99,15 +44,12 @@ export const RatesTab = TabNavigator(
             backgroundColor: backgroundColor,
             justifyContent: 'center',
             alignItems: 'center',
+            height: (deviceHeight / 14)
           }}
           labelStyle={{
             fontSize: 15,
             marginBottom: ((deviceHeight * 4) / 55) * 0.1,
           }}
-          // indicatorStyle= {{
-          //   backgroundColor: '#ffffff',
-          //   height: 0,
-          // }}
         />
       );
     },
@@ -140,4 +82,3 @@ export default class App extends Component<Props> {
     );
   }
 }
-

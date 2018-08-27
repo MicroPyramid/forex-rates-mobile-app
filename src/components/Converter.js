@@ -26,7 +26,7 @@ export default class Converter extends Component {
       to: '',
       amount: 0,
       totalAmount: 0,
-      selecedDate: formatDate(new Date),
+      selectedDate: formatDate(new Date),
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
@@ -46,10 +46,12 @@ export default class Converter extends Component {
  
   converter(base=false, currency) {
     const { to, amount, totalAmount} = this.state;
+    let getFromCurrency = this.state.from.split(' ')[2]
+    let getToCurrency = to.split(' ')[2]
     if(this.state.from && to) {
-      fetch_get(`${this.state.selecedDate}?base=${this.state.from}&symbols=${to}`)
+      fetch_get(`${this.state.selectedDate}?base=${getFromCurrency}&symbols=${getToCurrency}`)
       .then((response) => {
-        let totalAmount = this.state.amount > 0 ? response.rates[this.state.to] * this.state.amount : response.rates[to]; 
+        let totalAmount = this.state.amount > 0 ? response.rates[getToCurrency] * this.state.amount : response.rates[getToCurrency]; 
         this.setState({ totalAmount })
       })
     }
@@ -66,7 +68,7 @@ export default class Converter extends Component {
           var date = new Date(year, month, day);
           newState[stateKey + 'Text'] = date.toLocaleDateString();
           newState[stateKey + 'Date'] = date;
-          this.setState({ selecedDate: formatDate(date) }, () => this.converter());
+          this.setState({ selectedDate: formatDate(date) }, () => this.converter());
         }
         this.setState(newState);
       } catch ({ code, message }) {
@@ -79,70 +81,72 @@ export default class Converter extends Component {
     return (
       <View style={styles.viewStyle}>
         <StatusBar
-          backgroundColor="#f00000"
+          backgroundColor="#ff0000"
           barstyle="light-content"
         />
         <Header headerText='Converter' />
-        <ScrollView style={styles.baseView}>
+        <ScrollView contentContainerStyle={styles.baseView}>
           <View style={{ flex: 2 }}></View>
-          <View style={styles.convertInputs}>
-            <Text style={styles.textView}>Date</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
-              <Text style={{ fontSize: 18, color: '#fff' }}>{this.state.selecedDate}</Text>
-              <TouchableOpacity
-                onPress={this.showDatePicker.bind(this, 'max', {
-                date: this.state.maxDate,
-                maxDate: new Date() })}
+            <View style={styles.convertInputs}>
+              <Text style={styles.textView}>Date</Text>
+              <View style={styles.dateView}>
+                <Text style={styles.dateText}>{this.state.selectedDate}</Text>
+                <TouchableOpacity
+                  onPress={this.showDatePicker.bind(this, 'max', {
+                  date: this.state.maxDate,
+                  maxDate: new Date() })}
+                >
+                <Icon name="calendar" size={25} color="#fff" />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.convertInputs}>
+              <Text style={styles.textView}>From</Text>
+              <Picker
+                selectedValue={this.state.from}
+                style={styles.pickerStyle}
+                mode='dropdown'
+                onValueChange={(itemValue, itemIndex) => this.setState({ from: itemValue }, () => { this.converter() } )}
               >
-              <Icon name="calendar" size={25} color="#fff" />
-              </TouchableOpacity>
+                <Picker.Item value='' color={'#fff'} label='Select Country' />
+                {
+                  CountryCurrencies.map((currency) =>
+                    <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
+                  )
+                }
+              </Picker>
             </View>
-          </View>
-          <View style={styles.convertInputs}>
-            <Text style={styles.textView}>From</Text>
-            <Picker
-              selectedValue={this.state.from}
-              style={styles.pickerStyle}
-              onValueChange={(itemValue, itemIndex) => this.setState({ from: itemValue }, () => { this.converter() } )}
-            >
-              <Picker.Item value='' color={'#fff'} label='Select Country' />
-              {
-                CountryCurrencies.map((currency) =>
-                  <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
-                )
-              }
-            </Picker>
-          </View>
-          <View style={styles.convertInputs}>
-            <Text style={styles.textView}>To</Text>
-            <Picker
-              selectedValue={this.state.to}
-              style={styles.pickerStyle}
-              onValueChange={(itemValue, itemIndex) => this.setState({ to: itemValue }, () => { this.converter() } )}
-            >
-              <Picker.Item value='' color={'#fff'} label='Select Country' />
-              {
-                CountryCurrencies.map((currency) =>
-                  <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
-                )
-              }
-            </Picker>
-          </View>
-          <View style={styles.convertInputs}>
-            <Text style={styles.textView}>Amount</Text>
-            <TextInput
-              style={styles.inputStyles}
-              onChangeText={(amount) => this.setState({amount}, () => { this.converter() } )}
-              value={this.state.amount}
-              keyboardType="number-pad"
-            />
-          </View>
-          <View style={styles.convertInputs}>
-            <Text style={styles.textView}>Total</Text>
-            <View style={styles.totalAmountView}>
-              <Text style={styles.totalAmountText}>{this.state.totalAmount}</Text>
+            <View style={styles.convertInputs}>
+              <Text style={styles.textView}>To</Text>
+              <Picker
+                selectedValue={this.state.to}
+                style={styles.pickerStyle}
+                mode='dropdown'
+                onValueChange={(itemValue, itemIndex) => this.setState({ to: itemValue }, () => { this.converter() } )}
+              >
+                <Picker.Item value='' color={'#fff'} label='Select Country' />
+                {
+                  CountryCurrencies.map((currency) =>
+                    <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
+                  )
+                }
+              </Picker>
             </View>
-          </View>
+            <View style={styles.convertInputs}>
+              <Text style={styles.textView}>Amount</Text>
+              <TextInput
+                style={styles.inputStyles}
+                onChangeText={(amount) => this.setState({amount}, () => { this.converter() } )}
+                value={this.state.amount}
+                keyboardType="number-pad"
+              />
+            </View>
+            <View style={styles.convertInputs}>
+              <Text style={styles.textView}>Total</Text>
+              <View style={styles.totalAmountView}>
+                <Text style={styles.totalAmountText}>{this.state.totalAmount}</Text>
+              </View>
+            </View>
           <View style={{ flex: 3 }}></View>
         </ScrollView>
       </View>
@@ -162,11 +166,11 @@ function formatDate(date) {
 
 const styles = {
   pickerStyle: {
-    width: Dimensions.get('window').width/1.5,
-    height: Dimensions.get('window').height/20,
-    borderWidth: 1,
-    borderColor: '#f00000',
-    color: 'white'
+    width: Dimensions.get('window').width/2.3,
+    height: Dimensions.get('window').height/25,
+    borderWidth: 5,
+    borderColor: '#ff0000',
+    color: 'white',
   },
   viewStyle: {
     flex: 1,
@@ -176,39 +180,57 @@ const styles = {
   },
   baseView: {
     flex: 1,
-    margin: 20,
+    // margin: 20,
     flexDirection: 'column',
+    justifyContent: 'center',
+    // alignItems: 'center'
   },
   textView: {
     fontSize: 18,
-    color: '#f00000'
+    color: '#ff0000',
+    fontFamily: 'Roboto-Medium',
+    paddingRight: 10
   },
   inputStyles: {
-    width: Dimensions.get('window').width/1.6,
+    width: Dimensions.get('window').width/2.3,
     height: Dimensions.get('window').height/20,
     borderWidth: 1, 
-    borderColor: '#f00000' ,
-    margin: 5,
-    color: '#fff'
+    borderColor: '#ff0000' ,
+    // margin: 5,
+    color: '#fff',
+    fontFamily: 'Roboto-Medium',
   },
   convertInputs: {
     margin: 10,
-    flex: 1
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around'
   },
   totalAmountView: {
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width/3,
     height: Dimensions.get('window').height/10,
-    backgroundColor: '#f00000',
+    backgroundColor: '#ff0000',
     margin: 20,
-    marginLeft: 80
+    marginTop: 50
   },
   totalAmountText: {
     color: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 20
+    fontSize: 20,
+    fontFamily: 'Roboto-Bold',
+  },
+  dateView: {
+    width: Dimensions.get('window').width/2,
+    height: Dimensions.get('window').height/20,
+    flexDirection: 'row', 
+    justifyContent: 'space-around', 
+    // margin: 10
+  },
+  dateText : {
+    fontSize: 18, 
+    color: '#fff'
   }
 }
-
