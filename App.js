@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Text, View, Dimensions } from 'react-native';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import Rates from './src/components/Rates';
 import Converter from './src/components/Converter';
-import Chart from './src/components/Chart';
+import Help from './src/components/Help';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -16,23 +17,23 @@ export const RatesTab = TabNavigator(
       screen: Rates,
       navigationOptions: {
         title: 'Rates',
-        tabBarIcon: ({ tintColor }) => (<Icon name='dollar' size={20} color={tintColor} />)
+        tabBarIcon: ({ tintColor }) => (<FontAwesomeIcon name='dollar' size={20} color={tintColor} />)
       },
     },
     Tab2: {
       screen: Converter,
       navigationOptions: {
         title: 'Converter',
-        tabBarIcon: ({ tintColor }) => (<Icon name='exchange' size={20} color={tintColor} />)
+        tabBarIcon: ({ tintColor }) => (<FontAwesomeIcon name='exchange' size={20} color={tintColor} />)
       },
     },
     Tab3: {
-      screen: Chart,
+      screen: Help,
       navigationOptions: {
-        title: 'Chart',
-        tabBarIcon: ({ tintColor }) => (<Icon name='line-chart' size={20} color={tintColor} />)
+        title: 'Help',
+        tabBarIcon: ({ tintColor }) => (<FontAwesome5Icon name='hands-helping' size={20} color={tintColor} />)
       },
-    },
+    }
   },
   {
     lazy: true,

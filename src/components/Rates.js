@@ -61,14 +61,12 @@ export default class Rates extends Component {
       this.setState({ searching: false, CountriesDetails: CountriesDetails }, () => { this.sortPinCountries() })
       return true;
     } else {
-      this.props.navigation.goBack();
       return false;
     }
   }
 
   fetchForexRates(base=false, currency=this.state.base) {
     let getCurrency = currency.split(' ')[2]
-    console.log(getCurrency)
     fetch_get(`${this.state.selectedDate}?base=${getCurrency}`)
     .then((response) => {
       this.setState({ 
@@ -167,14 +165,6 @@ export default class Rates extends Component {
             :
               <View style={headerStyles.headerViewStyle}>
                 <Text style={headerStyles.headerStyle}>Rates</Text>
-                <Text style={headerStyles.headerStyle}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
-                <TouchableOpacity
-                  onPress={this.showDatePicker.bind(this, 'max', {
-                  date: this.state.maxDate,
-                  maxDate: new Date() })}
-                >
-                  <Icon name="calendar" size={20} color="#000" />
-                </TouchableOpacity>
                 <Icon name="search" size={20} color="#000" onPress={() => this.setState({ searching: true }, () => { this.textInput.focus() }) } />
               </View>
             }
@@ -195,6 +185,18 @@ export default class Rates extends Component {
                 )
               }
             </Picker>
+            <View style={{ flex: 0.6, justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row' }}>
+              <View>
+                <Text style={{ color: '#fff', fontSize: 16 }}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={this.showDatePicker.bind(this, 'max', {
+                date: this.state.maxDate,
+                maxDate: new Date() })}
+              >
+                <Icon name="calendar" size={20} color="#000" />
+              </TouchableOpacity>
+            </View>
           </View>
           {(!this.state.loading && this.state.forExRates.rates) ? 
             <ScrollView style={styles.countriesView}>
@@ -210,14 +212,14 @@ export default class Rates extends Component {
                         <Text style={[styles.textStyles, {fontSize: 17}]}>{country.name}</Text>
                         <Text style={styles.textStyles}>{country.currencies[0].code}</Text>
                       </View>
-                      <View style={[ styles.cardView, {flex: 0.4}]}>
+                      <View style={[ styles.cardView, {flex: 0.4, alignItems: 'flex-end'}]}>
                         <Text style={[styles.textStyles, {fontSize: 21}]}>{ country.currencies[0].symbol } { value }</Text>
                       </View>
                       <TouchableOpacity 
                         style={styles.pinStyle}
                         onPress={() => this.pinCurrency(key, index, this.state.getPinnedCurrencies.includes(key) ? false : true) }
                       >
-                        <Icon name="pin" size={25} color={this.state.getPinnedCurrencies.includes(key) ? '#ff2348' : "#ccc" }/>
+                        <Icon name="pin" size={18} color={this.state.getPinnedCurrencies.includes(key) ? '#ff2348' : "#ccc" }/>
                       </TouchableOpacity>
                     </CardComponent>
                   </View>
@@ -251,8 +253,8 @@ const styles = {
   },
   baseView: {
     flex: 0.13,
-    justifyContent: 'center',
-    backgroundColor: '#ff0000',
+    justifyContent: 'space-around',
+    backgroundColor: '#f41111',
     flexDirection: 'row'
   },
   cardView: {
@@ -261,11 +263,11 @@ const styles = {
     alignItems: 'center'
   },
   pickerStyle: {
-    width: Dimensions.get('window').width/1.9,
+    width: Dimensions.get('window').width/2.5,
     height: Dimensions.get('window').height/9,
     borderTopWidth: 1,
     borderColor: '#fff',
-    marginRight: 15
+    // marginRight: 15
   },
   countriesView: {
     flex: 0.8,
@@ -293,7 +295,7 @@ const styles = {
   },
   pinStyle: {
     flex: 0.1, 
-    justifyContent: 'center', 
+    justifyContent: 'flex-start', 
     alignItems: 'center', 
     paddingRight: 5
   },

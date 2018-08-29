@@ -22,8 +22,8 @@ export default class Converter extends Component {
  constructor(props) {
   super(props);
     this.state = {
-      from: '',
-      to: '',
+      from: ' 🇩🇪 EUR',
+      to: ' 🇺🇸 USD',
       amount: 0,
       totalAmount: 0,
       selectedDate: formatDate(new Date),
@@ -32,6 +32,7 @@ export default class Converter extends Component {
   }
 
   componentDidMount() {
+    this.converter()
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
@@ -84,9 +85,10 @@ export default class Converter extends Component {
           backgroundColor="#ff0000"
           barstyle="light-content"
         />
-        <Header headerText='Converter' />
+        <Header headerText='Rates' subHeaderText='   Converter' />
         <ScrollView contentContainerStyle={styles.baseView}>
-          <View style={{ flex: 2 }}></View>
+          <View style={{ flex: 1 }}></View>
+            <Text style={{ color: '#ff0000', fontSize: 25, fontFamily: 'Roboto-BoldItalic' }}>Converter{'\n'} {'\n'}</Text>
             <View style={styles.convertInputs}>
               <Text style={styles.textView}>Date</Text>
               <View style={styles.dateView}>
@@ -101,30 +103,25 @@ export default class Converter extends Component {
               </View>
             </View>
             <View style={styles.convertInputs}>
-              <Text style={styles.textView}>From</Text>
               <Picker
                 selectedValue={this.state.from}
-                style={styles.pickerStyle}
+                style={[styles.pickerStyle, { marginRight: 20 }]}
                 mode='dropdown'
                 onValueChange={(itemValue, itemIndex) => this.setState({ from: itemValue }, () => { this.converter() } )}
               >
-                <Picker.Item value='' color={'#fff'} label='Select Country' />
                 {
                   CountryCurrencies.map((currency) =>
                     <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
                   )
                 }
               </Picker>
-            </View>
-            <View style={styles.convertInputs}>
-              <Text style={styles.textView}>To</Text>
+              <Icon name="exchange" size={25} color="#fff" style={{ marginTop: 5 }} />
               <Picker
                 selectedValue={this.state.to}
-                style={styles.pickerStyle}
+                style={[styles.pickerStyle, { marginLeft: 20 }]}
                 mode='dropdown'
                 onValueChange={(itemValue, itemIndex) => this.setState({ to: itemValue }, () => { this.converter() } )}
               >
-                <Picker.Item value='' color={'#fff'} label='Select Country' />
                 {
                   CountryCurrencies.map((currency) =>
                     <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
@@ -142,10 +139,12 @@ export default class Converter extends Component {
               />
             </View>
             <View style={styles.convertInputs}>
-              <Text style={styles.textView}>Total</Text>
-              <View style={styles.totalAmountView}>
-                <Text style={styles.totalAmountText}>{this.state.totalAmount}</Text>
-              </View>
+              { CountriesDetails.map((country) =>
+                this.state.to.split(' ')[2] === country.currencies[0].code &&
+                <View style={styles.totalAmountView}>
+                  <Text style={styles.totalAmountText}>{ country.currencies[0].symbol } {this.state.totalAmount}</Text>
+                </View>
+              )}
             </View>
           <View style={{ flex: 3 }}></View>
         </ScrollView>
@@ -166,11 +165,11 @@ function formatDate(date) {
 
 const styles = {
   pickerStyle: {
-    width: Dimensions.get('window').width/2.3,
-    height: Dimensions.get('window').height/25,
-    borderWidth: 5,
+    width: Dimensions.get('window').width/3.1,
+    height: Dimensions.get('window').height/21,
     borderColor: '#ff0000',
     color: 'white',
+    backgroundColor: 'red'
   },
   viewStyle: {
     flex: 1,
@@ -180,10 +179,8 @@ const styles = {
   },
   baseView: {
     flex: 1,
-    // margin: 20,
     flexDirection: 'column',
     justifyContent: 'center',
-    // alignItems: 'center'
   },
   textView: {
     fontSize: 18,
@@ -194,32 +191,30 @@ const styles = {
   inputStyles: {
     width: Dimensions.get('window').width/2.3,
     height: Dimensions.get('window').height/20,
-    borderWidth: 1, 
+    borderBottomWidth: 1, 
     borderColor: '#ff0000' ,
-    // margin: 5,
     color: '#fff',
     fontFamily: 'Roboto-Medium',
+    fontSize: 17
   },
   convertInputs: {
-    margin: 10,
-    flex: 1,
+    flex: 0.7,
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
   totalAmountView: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: Dimensions.get('window').width/3,
+    width: Dimensions.get('window').width/2.5,
     height: Dimensions.get('window').height/10,
-    backgroundColor: '#ff0000',
     margin: 20,
-    marginTop: 50
+    marginTop: 30
   },
   totalAmountText: {
     color: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 20,
+    fontSize: 32,
     fontFamily: 'Roboto-Bold',
   },
   dateView: {
@@ -227,7 +222,6 @@ const styles = {
     height: Dimensions.get('window').height/20,
     flexDirection: 'row', 
     justifyContent: 'space-around', 
-    // margin: 10
   },
   dateText : {
     fontSize: 18, 

@@ -26,7 +26,7 @@ export default {
   headerStyle: {
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 20,
+    fontSize: 23,
     color: '#fff',
     fontFamily: 'Roboto-BoldItalic'
   }
