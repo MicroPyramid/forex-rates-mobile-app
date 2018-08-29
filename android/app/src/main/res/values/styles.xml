@@ -1,0 +1,31 @@
+<resources>
+
+    <!-- Base application theme. -->
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+	  <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+	  <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
+	   <item name="android:datePickerDialogTheme">@style/Dialog.Theme</item>
+	</style>
+
+	<style name="SpinnerItem" parent="Theme.AppCompat.Light.NoActionBar">>
+	  <item name="android:fontFamily">sans-serif-light</item>
+	  <item name="android:textSize">16dp</item>
+	</style>
+
+	<style name="SpinnerDropDownItem" parent="Theme.AppCompat.Light.NoActionBar">>
+	    <item name="android:textColor">#ffffff</item>
+	    <item name="android:textSize">16dp</item>
+	    <item name="android:layout_width">400dip</item>
+	    <item name="android:layout_height">500dip</item>
+	    <item name="android:fontFamily">Roboto-Bold</item>
+	    <item name="android:gravity">center</item>
+	    <item name="android:background">@drawable/mydivider</item>
+	    <!-- <item name="android:drawableRight">rftgyhujiko</item> -->
+	</style>
+
+	<style name="Dialog.Theme" parent="Theme.AppCompat.Light.Dialog">
+	    <item name="colorAccent">#ff0000</item>
+	    <item name="android:textColorPrimary">#ff0000</item>
+ 	</style>
+</resources>
