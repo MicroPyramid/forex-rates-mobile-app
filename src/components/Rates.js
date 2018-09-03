@@ -147,7 +147,7 @@ export default class Rates extends Component {
     return (
       <View style={styles.viewStyle}>
         <StatusBar
-          backgroundColor="#ff0000"
+          backgroundColor="#2363c3"
           barstyle="light-content"
         />
         <View>
@@ -187,7 +187,7 @@ export default class Rates extends Component {
             </Picker>
             <View style={{ flex: 0.6, justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row' }}>
               <View>
-                <Text style={{ color: '#fff', fontSize: 16 }}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
+                <Text style={{ color: '#fff', fontSize: 18 }}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
               </View>
               <TouchableOpacity
                 onPress={this.showDatePicker.bind(this, 'max', {
@@ -203,7 +203,7 @@ export default class Rates extends Component {
               { this.state.CountriesDetails.map((country, index) =>
                 Object.entries(this.state.forExRates.rates).map(([key, value]) =>
                 country.currencies[0].code === key ?
-                  <View style={{ backgroundColor: '#000'}} key={key}>
+                  <View style={{ backgroundColor: '#fff'}} key={key}>
                     <CardComponent key={country.name}>
                       <View style={styles.cardView}>
                         <Flag code={country.alpha2Code} style={styles.flagStyle} />
@@ -219,7 +219,7 @@ export default class Rates extends Component {
                         style={styles.pinStyle}
                         onPress={() => this.pinCurrency(key, index, this.state.getPinnedCurrencies.includes(key) ? false : true) }
                       >
-                        <Icon name="pin" size={18} color={this.state.getPinnedCurrencies.includes(key) ? '#ff2348' : "#ccc" }/>
+                        <Icon name="pin" size={18} color={this.state.getPinnedCurrencies.includes(key) ? '#2363c3' : "#ccc" }/>
                       </TouchableOpacity>
                     </CardComponent>
                   </View>
@@ -254,7 +254,7 @@ const styles = {
   baseView: {
     flex: 0.13,
     justifyContent: 'space-around',
-    backgroundColor: '#f41111',
+    backgroundColor: '#2363c3',
     flexDirection: 'row'
   },
   cardView: {
@@ -290,7 +290,7 @@ const styles = {
   },
   textStyles: {
     fontSize: 13, 
-    color: '#fff', 
+    color: '#000', 
     fontFamily: 'Roboto-Medium'
   },
   pinStyle: {

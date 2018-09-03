@@ -24,7 +24,7 @@ export default class Converter extends Component {
     this.state = {
       from: ' 🇩🇪 EUR',
       to: ' 🇺🇸 USD',
-      amount: 0,
+      amount: null,
       totalAmount: 0,
       selectedDate: formatDate(new Date),
     };
@@ -82,13 +82,13 @@ export default class Converter extends Component {
     return (
       <View style={styles.viewStyle}>
         <StatusBar
-          backgroundColor="#ff0000"
+          backgroundColor="#2363c3"
           barstyle="light-content"
         />
         <Header headerText='Rates' subHeaderText='   Converter' />
         <ScrollView contentContainerStyle={styles.baseView}>
           <View style={{ flex: 1 }}></View>
-            <Text style={{ color: '#ff0000', fontSize: 25, fontFamily: 'Roboto-BoldItalic' }}>Converter{'\n'} {'\n'}</Text>
+            <Text style={{ color: '#000', fontSize: 25, fontFamily: 'Roboto-BoldItalic' }}>Converter{'\n'} {'\n'}</Text>
             <View style={styles.convertInputs}>
               <Text style={styles.textView}>Date</Text>
               <View style={styles.dateView}>
@@ -98,7 +98,7 @@ export default class Converter extends Component {
                   date: this.state.maxDate,
                   maxDate: new Date() })}
                 >
-                <Icon name="calendar" size={25} color="#fff" />
+                <Icon name="calendar" size={25} color="#000" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -111,11 +111,11 @@ export default class Converter extends Component {
               >
                 {
                   CountryCurrencies.map((currency) =>
-                    <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
+                    <Picker.Item label={currency} color={'#000'} value={currency} key={currency}/>
                   )
                 }
               </Picker>
-              <Icon name="exchange" size={25} color="#fff" style={{ marginTop: 5 }} />
+              <Icon name="exchange" size={25} color="#000" style={{ marginTop: 5 }} />
               <Picker
                 selectedValue={this.state.to}
                 style={[styles.pickerStyle, { marginLeft: 20 }]}
@@ -124,17 +124,17 @@ export default class Converter extends Component {
               >
                 {
                   CountryCurrencies.map((currency) =>
-                    <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
+                    <Picker.Item label={currency} color={'#000'} value={currency} key={currency}/>
                   )
                 }
               </Picker>
             </View>
             <View style={styles.convertInputs}>
-              <Text style={styles.textView}>Amount</Text>
+              <Text style={[styles.textView, { marginTop: 10 }]}>Amount</Text>
               <TextInput
                 style={styles.inputStyles}
                 onChangeText={(amount) => this.setState({amount}, () => { this.converter() } )}
-                value={this.state.amount}
+                value={this.state.amount ? this.state.amount : '1'}
                 keyboardType="number-pad"
               />
             </View>
@@ -142,7 +142,7 @@ export default class Converter extends Component {
               { CountriesDetails.map((country) =>
                 this.state.to.split(' ')[2] === country.currencies[0].code &&
                 <View style={styles.totalAmountView}>
-                  <Text style={styles.totalAmountText}>{ country.currencies[0].symbol } {this.state.totalAmount}</Text>
+                  <Text style={styles.totalAmountText}>{ country.currencies[0].symbol } {this.state.totalAmount.toFixed(3)}</Text>
                 </View>
               )}
             </View>
@@ -169,11 +169,11 @@ const styles = {
     height: Dimensions.get('window').height/21,
     borderColor: '#ff0000',
     color: 'white',
-    backgroundColor: 'red'
+    backgroundColor: '#2363c3'
   },
   viewStyle: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -184,16 +184,16 @@ const styles = {
   },
   textView: {
     fontSize: 18,
-    color: '#ff0000',
+    color: '#666666',
     fontFamily: 'Roboto-Medium',
     paddingRight: 10
   },
   inputStyles: {
     width: Dimensions.get('window').width/2.3,
-    height: Dimensions.get('window').height/20,
+    height: Dimensions.get('window').height/18,
     borderBottomWidth: 1, 
-    borderColor: '#ff0000' ,
-    color: '#fff',
+    borderColor: '#2363c3' ,
+    color: '#000',
     fontFamily: 'Roboto-Medium',
     fontSize: 17
   },
@@ -211,7 +211,7 @@ const styles = {
     marginTop: 30
   },
   totalAmountText: {
-    color: '#fff',
+    color: '#2363c3',
     justifyContent: 'center',
     alignItems: 'center',
     fontSize: 32,
@@ -225,6 +225,6 @@ const styles = {
   },
   dateText : {
     fontSize: 18, 
-    color: '#fff'
+    color: '#000'
   }
 }

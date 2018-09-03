@@ -11,7 +11,7 @@ const CardComponent = (props) => {
 
 const styles = {
   constainerStyle: {
-    borderTopWidth: 1,
+    borderWidth: 2,
     // padding: 25,
     paddingTop: 8,
     paddingBottom: 8,
@@ -19,10 +19,10 @@ const styles = {
     // backgroundColor: '#fff',
     justifyContent: 'flex-start',
     flexDirection: 'row',
-    borderColor: '#555',
+    borderColor: '#e1e8ee',
     position: 'relative',
     // margin: 5,
-    // marginRight: 20,
+    // marginRight: 5,
     // marginLeft: 20,
     borderRadius: 5,
     // shadowColor: '#000',
