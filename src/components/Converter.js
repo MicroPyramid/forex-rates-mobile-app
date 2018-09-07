@@ -36,9 +36,6 @@ export default class Converter extends Component {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
 
   handleBackButtonClick() {
     this.props.navigation.goBack();
@@ -78,6 +75,14 @@ export default class Converter extends Component {
     }  
   };
 
+  exchangeValues(from, to) {
+    this.setState({ from: to, to: from }, () => { this.converter() })
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+
   render() {
     return (
       <View style={styles.viewStyle}>
@@ -91,16 +96,15 @@ export default class Converter extends Component {
             <Text style={{ color: '#000', fontSize: 25, fontFamily: 'Roboto-BoldItalic' }}>Converter{'\n'} {'\n'}</Text>
             <View style={styles.convertInputs}>
               <Text style={styles.textView}>Date</Text>
-              <View style={styles.dateView}>
-                <Text style={styles.dateText}>{this.state.selectedDate}</Text>
                 <TouchableOpacity
                   onPress={this.showDatePicker.bind(this, 'max', {
                   date: this.state.maxDate,
                   maxDate: new Date() })}
+                  style={styles.dateView}
                 >
-                <Icon name="calendar" size={25} color="#000" />
+                  <Text style={styles.dateText}>{this.state.selectedDate}</Text>
+                  <Icon name="calendar" size={25} color="#000" />
                 </TouchableOpacity>
-              </View>
             </View>
             <View style={styles.convertInputs}>
               <Picker
@@ -111,11 +115,15 @@ export default class Converter extends Component {
               >
                 {
                   CountryCurrencies.map((currency) =>
-                    <Picker.Item label={currency} color={'#000'} value={currency} key={currency}/>
+                    <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
                   )
                 }
               </Picker>
-              <Icon name="exchange" size={25} color="#000" style={{ marginTop: 5 }} />
+              <TouchableOpacity
+                onPress={() => this.exchangeValues(this.state.from, this.state.to)}
+              >
+                <Icon name="exchange" size={25} color="#000" style={{ marginTop: 5 }} />
+              </TouchableOpacity>
               <Picker
                 selectedValue={this.state.to}
                 style={[styles.pickerStyle, { marginLeft: 20 }]}
@@ -124,7 +132,7 @@ export default class Converter extends Component {
               >
                 {
                   CountryCurrencies.map((currency) =>
-                    <Picker.Item label={currency} color={'#000'} value={currency} key={currency}/>
+                    <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
                   )
                 }
               </Picker>
@@ -141,8 +149,8 @@ export default class Converter extends Component {
             <View style={styles.convertInputs}>
               { CountriesDetails.map((country) =>
                 this.state.to.split(' ')[2] === country.currencies[0].code &&
-                <View style={styles.totalAmountView}>
-                  <Text style={styles.totalAmountText}>{ country.currencies[0].symbol } {this.state.totalAmount.toFixed(3)}</Text>
+                <View key={country.alpha2Code} style={styles.totalAmountView}>
+                  <Text style={styles.totalAmountText}>{ country.currencies[0].symbol } {this.state.totalAmount ? this.state.totalAmount.toFixed(3) : 0 }</Text>
                 </View>
               )}
             </View>
@@ -195,7 +203,8 @@ const styles = {
     borderColor: '#2363c3' ,
     color: '#000',
     fontFamily: 'Roboto-Medium',
-    fontSize: 17
+    fontSize: 17,
+    paddingBottom: 0
   },
   convertInputs: {
     flex: 0.7,
@@ -205,16 +214,18 @@ const styles = {
   totalAmountView: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: Dimensions.get('window').width/2.5,
-    height: Dimensions.get('window').height/10,
+    width: Dimensions.get('window').width/2.0,
+    height: Dimensions.get('window').height/16,
+    borderRadius: Dimensions.get('window').width/2.1,
     margin: 20,
-    marginTop: 30
+    marginTop: 30,
+    backgroundColor: '#61b207'
   },
   totalAmountText: {
-    color: '#2363c3',
+    color: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 32,
+    fontSize: 17,
     fontFamily: 'Roboto-Bold',
   },
   dateView: {
