@@ -52,9 +52,6 @@ export default class Rates extends Component {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
 
   handleBackButtonClick() {
     if(this.state.searching) {
@@ -143,6 +140,10 @@ export default class Rates extends Component {
     }  
   };
   
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+
   render() {
     return (
       <View style={styles.viewStyle}>
@@ -185,18 +186,15 @@ export default class Rates extends Component {
                 )
               }
             </Picker>
-            <View style={{ flex: 0.6, justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row' }}>
-              <View>
-                <Text style={{ color: '#fff', fontSize: 18 }}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
-              </View>
-              <TouchableOpacity
-                onPress={this.showDatePicker.bind(this, 'max', {
-                date: this.state.maxDate,
-                maxDate: new Date() })}
-              >
-                <Icon name="calendar" size={20} color="#000" />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={this.showDatePicker.bind(this, 'max', {
+              date: this.state.maxDate,
+              maxDate: new Date() })}
+              style={{ flex: 0.6, justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row' }}
+            >
+              <Text style={{ color: '#fff', fontSize: 18 }}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
+              <Icon name="calendar" size={20} color="#000" />
+            </TouchableOpacity>
           </View>
           {(!this.state.loading && this.state.forExRates.rates) ? 
             <ScrollView style={styles.countriesView}>

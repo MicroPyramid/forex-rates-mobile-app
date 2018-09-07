@@ -3,13 +3,30 @@ import {
   View, 
   Text,
   Linking,
-  ScrollView
+  ScrollView,
+  BackHandler
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Zocial';
 import { Header, fetch_get, CardComponent, Card } from '../common';
 
 export default class Help extends Component {
+   constructor(props) {
+    super(props);
+    this.state = {
+    };
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+  }
 
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+
+
+  handleBackButtonClick() {
+    this.props.navigation.goBack();
+    return true;
+  }
+  
   openURL(url) {
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
@@ -18,6 +35,10 @@ export default class Help extends Component {
         console.log("Not supported");
       }
     });
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   render() {
@@ -72,23 +93,23 @@ export default class Help extends Component {
             <Text style={[styles.text, { fontSize: 18 }]}>
               <Icon name="email" size={20} color="red"></Icon> hello@micropyramid.com
             </Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Card>
-                <Text style={[styles.text, { fontWeight: 'bold' }]}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <Card style={{ backgroundColor: '#a3a3a3' }}>
+                <Text style={[styles.text, { fontWeight: 'bold', color: '#fff' }]}>
                   USA {'\n'}
                 </Text>
-                <Text style={styles.text}>
+                <Text style={[styles.text, { color: '#fff' }]}>
                   3737 Mapleshade Ln,{'\n'}
                   Suite 102,{'\n'} 
                   Plano TX 75075, {'\n'}
                   +1 510 230 0949 {'\n'} {'\n'}
                 </Text>
               </Card>
-              <Card>
-                <Text style={[styles.text, { fontWeight: 'bold' }]}>
+              <Card style={{ backgroundColor: '#a3a3a3'}}>
+                <Text style={[styles.text, { fontWeight: 'bold', color: '#fff' }]}>
                   India {'\n'}
                 </Text>
-                <Text style={styles.text}>
+                <Text style={[styles.text, { color: '#fff' }]}>
                   Krishe Sapphire,{'\n'}
                   6th Floor, {'\n'}
                   Madhapur, Hyderabad,{'\n'}
