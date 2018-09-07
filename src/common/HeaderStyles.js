@@ -1,6 +1,6 @@
 export default {
   viewStyle: {
-    backgroundColor: '#ff0000',
+    backgroundColor: '#2363c3',
     height: 50,
     shadowColor: '#000',
     shadowOpacity: 0.2,

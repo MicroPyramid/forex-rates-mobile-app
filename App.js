@@ -9,7 +9,7 @@ import Help from './src/components/Help';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
-const backgroundColor = '#ff0000';
+const backgroundColor = '#fff';
 
 export const RatesTab = TabNavigator(
   {
@@ -59,10 +59,10 @@ export const RatesTab = TabNavigator(
     tabBarPosition: 'bottom',
     initialRouteName: 'Tab1',
     tabBarOptions: {
-      activeTintColor: 'white',
+      activeTintColor: '#2363c3',
       activeBackgroundColor: backgroundColor,
-      inactiveTintColor: 'white',
-      inactiveBackgroundColor: 'black',
+      inactiveTintColor: 'black',
+      inactiveBackgroundColor: backgroundColor,
       marginTop: 50,
       paddingTop: 50
     },

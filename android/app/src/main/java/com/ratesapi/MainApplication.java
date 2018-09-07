@@ -1,4 +1,4 @@
-package com.ratesapi;
+package com.forexrates;
 
 import android.app.Application;
 
