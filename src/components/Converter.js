@@ -26,7 +26,7 @@ export default class Converter extends Component {
       from: ' 🇩🇪 EUR',
       to: ' 🇺🇸 USD',
       amount: null,
-      totalAmount: 0,
+      totalAmount: 1,
       selectedDate: formatDate(new Date),
       error: false
     };
@@ -157,7 +157,7 @@ export default class Converter extends Component {
                 { CountriesDetails.map((country) =>
                   this.state.to.split(' ')[2] === country.currencies[0].code &&
                   <View key={country.alpha2Code} style={styles.totalAmountView}>
-                    <Text style={styles.totalAmountText}>{ country.currencies[0].symbol } {this.state.totalAmount ? this.state.totalAmount.toFixed(3) : 0 }</Text>
+                    <Text style={styles.totalAmountText}>{ country.currencies[0].symbol } {this.state.totalAmount ? this.state.totalAmount.toFixed(3) : 1 }</Text>
                   </View>
                 )}
               </View>

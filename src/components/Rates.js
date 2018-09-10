@@ -282,7 +282,7 @@ const styles = {
   },
   countriesView: {
     flex: 0.8,
-    backgroundColor: '#000'
+    backgroundColor: '#fff'
   },
   baseTextStyles: {
     fontSize: 16,

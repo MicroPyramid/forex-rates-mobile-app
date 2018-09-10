@@ -64,9 +64,9 @@ export default class Help extends Component {
                 We welcome your feedback and support raise, github ticket
                 <Text 
                   style={[styles.text, { color: '#2b51ef', marginLeft: 2, marginRight: 2 }]}
-                  onPress={() => this.openURL('https://github.com/MicroPyramid/curreny-rates-mobile-app/')}
+                  onPress={() => this.openURL('https://github.com/MicroPyramid/forex-rates-mobile-app')}
                 >
-                  {' '} https://github.com/MicroPyramid/curreny-rates-mobile-app/ {' '} 
+                  {' '} https://github.com/MicroPyramid/forex-rates-mobile-app {' '} 
                 </Text>
                 <Text style={styles.text}>
                   if you want to report a bug in this app. {'\n'}
