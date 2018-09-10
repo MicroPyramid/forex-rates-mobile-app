@@ -9,12 +9,8 @@ export const fetch_get = (url) => {
       'Content-Type': 'application/json',
       }
     }
-  ).then(response => { 
-    if(response.status === 200) {
-      return response.json() 
-    } else {
-      return response
-    }
+  ).then(response => {
+    return response.json() 
   })  
   .catch((error) => {
     console.log(error)

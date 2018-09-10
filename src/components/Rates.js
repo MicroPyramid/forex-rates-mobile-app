@@ -13,11 +13,13 @@ import {
   StatusBar,
   AsyncStorage,
   DatePickerAndroid,
-  Platform
+  Platform,
+  PickerIOS,
+  PickerItemIOS
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import Flag from 'react-native-round-flags';
-import { Header, fetch_get, CardComponent, Spinner } from '../common';
+import { Header, fetch_get, CardComponent, Spinner, DateModal, PickerModal } from '../common';
 import headerStyles from '../common/HeaderStyles';
 import { CountriesDetails, CountryCurrencies } from '../CountriesDetails';
 
@@ -33,12 +35,15 @@ export default class Rates extends Component {
       CountriesDetails: CountriesDetails,
       getPinnedCurrencies: [],
       selectedDate: formatDate(new Date),
-      error: false,
+      iosSelectedDate: new Date(),
+      showDatePicker: false,
+      showPicker: false
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
   async componentDidMount() {
+    // await AsyncStorage.removeItem('@pinCurrency:key')
     let getPinnedCurrencies = await AsyncStorage.getItem('@pinCurrency:key')
     if (getPinnedCurrencies !== null){
       getPinnedCurrencies = JSON.parse(getPinnedCurrencies);
@@ -66,15 +71,11 @@ export default class Rates extends Component {
     let getCurrency = currency.split(' ')[2]
     fetch_get(`${this.state.selectedDate}?base=${getCurrency}`)
     .then((response) => {
-      if(response.status) {
-        this.setState({ error: true })
-      } else {
-        this.setState({ 
-          forExRates: response,
-          error: false,
-          loading: false
-        })
-      }
+      this.setState({ 
+        forExRates: response,
+        // base: response.base,
+        loading: false
+      })
     })
   }
 
@@ -141,7 +142,7 @@ export default class Rates extends Component {
       } catch ({ code, message }) {
         console.warn(`Error in example '${stateKey}': `, message);
       }
-    }  
+    }
   };
   
   componentWillUnmount() {
@@ -150,7 +151,7 @@ export default class Rates extends Component {
 
   render() {
     return (
-      <View style={styles.viewStyle}>
+      <View style={[styles.viewStyle, {opacity: (this.state.showDatePicker || this.state.showPicker) ? 0.2 : 1}]}>
         <StatusBar
           backgroundColor="#2363c3"
           barstyle="light-content"
@@ -175,9 +176,10 @@ export default class Rates extends Component {
             }
           </View>
         </View>
-        {!this.state.error ?
-          <View style={{ flex: 1 }}>
-            <View style={styles.baseView}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.baseView}>
+            {
+              Platform.OS === 'android' ?
               <Picker
                 selectedValue={this.state.base}
                 style={styles.pickerStyle}
@@ -190,58 +192,70 @@ export default class Rates extends Component {
                     <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
                   )
                 }
-              </Picker>
+              </Picker> :
               <TouchableOpacity
-                onPress={this.showDatePicker.bind(this, 'max', {
-                date: this.state.maxDate,
-                maxDate: new Date() })}
-                style={{ flex: 0.6, justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row' }}
+                style={styles.pickerIosStyle}
+                onPress={() => this.setState({ showPicker: !this.state.showPicker})}
               >
-                <Text style={{ color: '#fff', fontSize: 18 }}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
-                <Icon name="calendar" size={20} color="#000" />
+                <Text style={styles.baseTextStyles}>{this.state.base}</Text>
               </TouchableOpacity>
-            </View>
-            {(!this.state.loading && this.state.forExRates.rates) ? 
-              <ScrollView style={styles.countriesView}>
-                { this.state.CountriesDetails.map((country, index) =>
-                  Object.entries(this.state.forExRates.rates).map(([key, value]) =>
-                  country.currencies[0].code === key ?
-                    <View style={{ backgroundColor: '#fff'}} key={key}>
-                      <CardComponent key={country.name}>
-                        <View style={styles.cardView}>
-                          <Flag code={country.alpha2Code} style={styles.flagStyle} />
-                        </View>
-                        <View style={[ styles.cardView, {flex: 0.4, alignItems: 'flex-start'}]}>
-                          <Text style={[styles.textStyles, {fontSize: 17}]}>{country.name}</Text>
-                          <Text style={styles.textStyles}>{country.currencies[0].code}</Text>
-                        </View>
-                        <View style={[ styles.cardView, {flex: 0.4, alignItems: 'flex-end'}]}>
-                          <Text style={[styles.textStyles, {fontSize: 21}]}>{ country.currencies[0].symbol } { value }</Text>
-                        </View>
-                        <TouchableOpacity 
-                          style={styles.pinStyle}
-                          onPress={() => this.pinCurrency(key, index, this.state.getPinnedCurrencies.includes(key) ? false : true) }
-                        >
-                          <Icon name="pin" size={18} color={this.state.getPinnedCurrencies.includes(key) ? '#2363c3' : "#ccc" }/>
-                        </TouchableOpacity>
-                      </CardComponent>
-                    </View>
-                  : 
-                    null
-                  )
-                )}
-              </ScrollView>
-            :
-              <Spinner />
             }
+            <PickerModal
+              value={this.state.base}
+              showPicker={this.state.showPicker}
+              currencies={CountryCurrencies}
+              onChange={(base) => this.setState({base})}
+              onClose={() => this.setState({ showPicker: false }, () => this.fetchForexRates(true, this.state.base))}
+            />
+            <TouchableOpacity
+              onPress={Platform.OS === 'android' ? this.showDatePicker.bind(this, 'max', {
+              date: this.state.maxDate,
+              maxDate: new Date() }) : () => this.setState({ showDatePicker: !this.state.showDatePicker})}
+              style={{ flex: 0.6, justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row' }}
+            >
+              <Text style={{ color: '#fff', fontSize: 18 }}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
+              <Icon name="calendar" size={20} color="#000" />
+            </TouchableOpacity>
+            <DateModal
+              showDatePicker={this.state.showDatePicker}
+              onDateChange={(iosSelectedDate) => this.setState({iosSelectedDate, selectedDate: formatDate(iosSelectedDate)})}
+              onClose={() => this.setState({ showDatePicker: false }, this.fetchForexRates.bind(this))}
+            />
           </View>
-        :
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={[styles.textStyles, {fontSize: 16, lineHeight: 25 }]}>
-              Currency source not available.{'\n'} Please try after some time
-            </Text>
-          </View>
-        }
+          {(!this.state.loading && this.state.forExRates.rates) ? 
+            <ScrollView style={styles.countriesView}>
+              { this.state.CountriesDetails.map((country, index) =>
+                Object.entries(this.state.forExRates.rates).map(([key, value]) =>
+                country.currencies[0].code === key ?
+                  <View style={{ backgroundColor: '#fff'}} key={key}>
+                    <CardComponent key={country.name}>
+                      <View style={styles.cardView}>
+                        <Flag code={country.alpha2Code} style={styles.flagStyle} />
+                      </View>
+                      <View style={[ styles.cardView, {flex: 0.4, alignItems: 'flex-start'}]}>
+                        <Text style={[styles.textStyles, {fontSize: 17}]}>{country.name}</Text>
+                        <Text style={styles.textStyles}>{country.currencies[0].code}</Text>
+                      </View>
+                      <View style={[ styles.cardView, {flex: 0.4, alignItems: 'flex-end'}]}>
+                        <Text style={[styles.textStyles, {fontSize: 21}]}>{ country.currencies[0].symbol } { value }</Text>
+                      </View>
+                      <TouchableOpacity 
+                        style={styles.pinStyle}
+                        onPress={() => this.pinCurrency(key, index, this.state.getPinnedCurrencies.includes(key) ? false : true) }
+                      >
+                        <Icon name="pin" size={18} color={this.state.getPinnedCurrencies.includes(key) ? '#2363c3' : "#ccc" }/>
+                      </TouchableOpacity>
+                    </CardComponent>
+                  </View>
+                : 
+                  null
+                )
+              )}
+            </ScrollView>
+          :
+            <Spinner />
+          }
+        </View>
       </View> 
     );
   }
@@ -260,9 +274,10 @@ function formatDate(date) {
 const styles = {
   viewStyle: {
     flex: 1,
+    marginTop: Platform.OS === 'ios' ? 20 : 0
   },
   baseView: {
-    flex: 0.13,
+    flex: Platform.OS === 'ios' ? 0.10 : 0.13,
     justifyContent: 'space-around',
     backgroundColor: '#2363c3',
     flexDirection: 'row'
@@ -279,14 +294,19 @@ const styles = {
     borderColor: '#fff',
     // marginRight: 15
   },
+  pickerIosStyle: {
+    width: Dimensions.get('window').width/2.5,
+    height: Dimensions.get('window').height/9,
+    color: '#fff'
+  },
   countriesView: {
     flex: 0.8,
-    backgroundColor: '#fff'
+    backgroundColor: '#000'
   },
   baseTextStyles: {
     fontSize: 16,
-    color: '#000',
-    fontFamily: 'Roboto-BoldItalic'
+    color: '#fff',
+    marginTop: 18
   },
   imageStyle: {
     width: 35,
@@ -312,5 +332,15 @@ const styles = {
   flagStyle: {
     width: 50, 
     height: 50
+  },
+  dateContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  containerStyle: {
+    padding: 5,
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'flex-end'
   }
 }
