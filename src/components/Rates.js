@@ -39,7 +39,6 @@ export default class Rates extends Component {
   }
 
   async componentDidMount() {
-    // await AsyncStorage.removeItem('@pinCurrency:key')
     let getPinnedCurrencies = await AsyncStorage.getItem('@pinCurrency:key')
     if (getPinnedCurrencies !== null){
       getPinnedCurrencies = JSON.parse(getPinnedCurrencies);
