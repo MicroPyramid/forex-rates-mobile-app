@@ -33,7 +33,7 @@ export default class Rates extends Component {
       CountriesDetails: CountriesDetails,
       getPinnedCurrencies: [],
       selectedDate: formatDate(new Date),
-      error: false
+      error: false,
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
