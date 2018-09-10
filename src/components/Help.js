@@ -4,7 +4,7 @@ import {
   Text,
   Linking,
   ScrollView,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Zocial';
 import { Header, fetch_get, CardComponent, Card } from '../common';
@@ -14,19 +14,8 @@ export default class Help extends Component {
     super(props);
     this.state = {
     };
-    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
-  componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-
-
-  handleBackButtonClick() {
-    this.props.navigation.goBack();
-    return true;
-  }
-  
   openURL(url) {
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
@@ -35,10 +24,6 @@ export default class Help extends Component {
         console.log("Not supported");
       }
     });
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   render() {

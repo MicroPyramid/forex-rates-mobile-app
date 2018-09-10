@@ -16,6 +16,7 @@ import {
   Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import Flag from 'react-native-round-flags';
 import { Header, fetch_get, CardComponent, Spinner } from '../common';
 import headerStyles from '../common/HeaderStyles';
@@ -35,7 +36,6 @@ export default class Rates extends Component {
       selectedDate: formatDate(new Date),
       error: false,
     };
-    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
   async componentDidMount() {
@@ -49,17 +49,6 @@ export default class Rates extends Component {
       getPinnedCurrencies: getPinnedCurrencies, 
       loading: true 
     }, () => { this.fetchForexRates(); this.sortPinCountries() })
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-
-
-  handleBackButtonClick() {
-    if(this.state.searching) {
-      this.setState({ searching: false, CountriesDetails: CountriesDetails }, () => { this.sortPinCountries() })
-      return true;
-    } else {
-      return false;
-    }
   }
 
   fetchForexRates(base=false, currency=this.state.base) {
@@ -143,10 +132,6 @@ export default class Rates extends Component {
       }
     }  
   };
-  
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
 
   render() {
     return (
@@ -158,15 +143,18 @@ export default class Rates extends Component {
         <View>
           <View style={headerStyles.viewStyle}>
             {this.state.searching ?
-              <TextInput
-                placeholder= "Search by Country"
-                underlineColorAndroid = 'transparent'
-                onChangeText={this.searchItems.bind(this)}
-                style={styles.searchinput}
-                ref={(input) => { this.textInput = input; }}
-                placeholderTextColor={'#ddd'}
-                selectionColor={'#fff'}
-              />
+              <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <TextInput
+                  placeholder= "Search by Country"
+                  underlineColorAndroid = 'transparent'
+                  onChangeText={this.searchItems.bind(this)}
+                  style={styles.searchinput}
+                  ref={(input) => { this.textInput = input; }}
+                  placeholderTextColor={'#ddd'}
+                  selectionColor={'#fff'}
+                />
+                <FontAwesome5Icon name="times" size={20} color="#fff" style={{ marginRight: 10}} onPress={() => this.setState({ searching: false , CountriesDetails: CountriesDetails }, () => { this.sortPinCountries() }) } />
+              </View>
             :
               <View style={headerStyles.headerViewStyle}>
                 <Text style={headerStyles.headerStyle}>Rates</Text>
@@ -277,7 +265,6 @@ const styles = {
     height: Dimensions.get('window').height/9,
     borderTopWidth: 1,
     borderColor: '#fff',
-    // marginRight: 15
   },
   countriesView: {
     flex: 0.8,
