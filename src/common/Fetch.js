@@ -10,7 +10,11 @@ export const fetch_get = (url) => {
       }
     }
   ).then(response => { 
-    return response.json() 
+    if(response.status === 200) {
+      return response.json() 
+    } else {
+      return response
+    }
   })  
   .catch((error) => {
     console.log(error)
