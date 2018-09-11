@@ -30,18 +30,10 @@ export default class Converter extends Component {
       selectedDate: formatDate(new Date),
       error: false
     };
-    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
   componentDidMount() {
     this.converter()
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-
-
-  handleBackButtonClick() {
-    this.props.navigation.goBack();
-    return true;
   }
  
   converter(base=false, currency) {
@@ -83,10 +75,6 @@ export default class Converter extends Component {
 
   exchangeValues(from, to) {
     this.setState({ from: to, to: from }, () => { this.converter() })
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   render() {
