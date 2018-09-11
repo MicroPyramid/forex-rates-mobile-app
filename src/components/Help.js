@@ -15,19 +15,8 @@ export default class Help extends Component {
     super(props);
     this.state = {
     };
-    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
-  componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-
-
-  handleBackButtonClick() {
-    this.props.navigation.goBack();
-    return true;
-  }
-  
   openURL(url) {
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
@@ -36,10 +25,6 @@ export default class Help extends Component {
         console.log("Not supported");
       }
     });
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   render() {
@@ -65,9 +50,9 @@ export default class Help extends Component {
                 We welcome your feedback and support raise, github ticket
                 <Text 
                   style={[styles.text, { color: '#2b51ef', marginLeft: 2, marginRight: 2 }]}
-                  onPress={() => this.openURL('https://github.com/MicroPyramid/curreny-rates-mobile-app/')}
+                  onPress={() => this.openURL('https://github.com/MicroPyramid/forex-rates-mobile-app')}
                 >
-                  {' '} https://github.com/MicroPyramid/currency-rates-mobile-app/ {' '} 
+                  {' '} https://github.com/MicroPyramid/forex-rates-mobile-app {' '} 
                 </Text>
                 <Text style={styles.text}>
                   if you want to report a bug in this app. {'\n'}
