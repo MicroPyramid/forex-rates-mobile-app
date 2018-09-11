@@ -58,6 +58,7 @@ export const RatesTab = TabNavigator(
     animationEnabled: false,
     tabBarPosition: 'bottom',
     initialRouteName: 'Tab1',
+    backBehavior: 'initialRoute',
     tabBarOptions: {
       activeTintColor: '#2363c3',
       activeBackgroundColor: backgroundColor,
