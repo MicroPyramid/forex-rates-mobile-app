@@ -5,6 +5,7 @@ import {
   Linking,
   ScrollView,
   BackHandler,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Zocial';
 import { Header, fetch_get, CardComponent, Card } from '../common';
@@ -114,6 +115,7 @@ const styles = {
   baseView: {
     flex: 1, 
     backgroundColor: '#fff',
+    marginTop: Platform.OS === 'ios' ? 20 : 0
   },
   text: {
     color: '#000',

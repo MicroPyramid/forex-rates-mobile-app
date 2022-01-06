@@ -13,12 +13,14 @@ import {
   StatusBar,
   AsyncStorage,
   DatePickerAndroid,
-  Platform
+  Platform,
+  PickerIOS,
+  PickerItemIOS
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import Flag from 'react-native-round-flags';
-import { Header, fetch_get, CardComponent, Spinner } from '../common';
+import { Header, fetch_get, CardComponent, Spinner, DateModal, PickerModal } from '../common';
 import headerStyles from '../common/HeaderStyles';
 import { CountriesDetails, CountryCurrencies } from '../CountriesDetails';
 
@@ -34,6 +36,9 @@ export default class Rates extends Component {
       CountriesDetails: CountriesDetails,
       getPinnedCurrencies: [],
       selectedDate: formatDate(new Date),
+      iosSelectedDate: new Date(),
+      showDatePicker: false,
+      showPicker: false,
       error: false,
     };
   }
@@ -130,12 +135,12 @@ export default class Rates extends Component {
       } catch ({ code, message }) {
         console.warn(`Error in example '${stateKey}': `, message);
       }
-    }  
+    }
   };
 
   render() {
     return (
-      <View style={styles.viewStyle}>
+      <View style={[styles.viewStyle, {opacity: (this.state.showDatePicker || this.state.showPicker) ? 0.2 : 1}]}>
         <StatusBar
           backgroundColor="#2363c3"
           barstyle="light-content"
@@ -166,28 +171,49 @@ export default class Rates extends Component {
         {!this.state.error ?
           <View style={{ flex: 1 }}>
             <View style={styles.baseView}>
-              <Picker
-                selectedValue={this.state.base}
-                style={styles.pickerStyle}
-                onValueChange={(itemValue, itemIndex) => this.setState({ base: itemValue }, () => { this.fetchForexRates(true, itemValue)} )}
-                pickerStyleType={false}
-                mode='dropdown'
-              >
-                {
-                  CountryCurrencies.map((currency) =>
-                    <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
-                  )
-                }
-              </Picker>
+              {
+                Platform.OS === 'android' ?
+                <Picker
+                  selectedValue={this.state.base}
+                  style={styles.pickerStyle}
+                  onValueChange={(itemValue, itemIndex) => this.setState({ base: itemValue }, () => { this.fetchForexRates(true, itemValue)} )}
+                  pickerStyleType={false}
+                  mode='dropdown'
+                >
+                  {
+                    CountryCurrencies.map((currency) =>
+                      <Picker.Item label={currency} color={'#fff'} value={currency} key={currency}/>
+                    )
+                  }
+                </Picker> :
+                <TouchableOpacity
+                  style={styles.pickerIosStyle}
+                  onPress={() => this.setState({ showPicker: !this.state.showPicker})}
+                >
+                  <Text style={styles.baseTextStyles}>{this.state.base}</Text>
+                </TouchableOpacity>
+              }
+              <PickerModal
+                value={this.state.base}
+                showPicker={this.state.showPicker}
+                currencies={CountryCurrencies}
+                onChange={(base) => this.setState({base})}
+                onClose={() => this.setState({ showPicker: false }, () => this.fetchForexRates(true, this.state.base))}
+              />
               <TouchableOpacity
-                onPress={this.showDatePicker.bind(this, 'max', {
+                onPress={Platform.OS === 'android' ? this.showDatePicker.bind(this, 'max', {
                 date: this.state.maxDate,
-                maxDate: new Date() })}
+                maxDate: new Date() }) : () => this.setState({ showDatePicker: !this.state.showDatePicker})}
                 style={{ flex: 0.6, justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row' }}
               >
                 <Text style={{ color: '#fff', fontSize: 18 }}>{this.state.selectedDate === this.state.today ? 'Today' : this.state.selectedDate}</Text>
                 <Icon name="calendar" size={20} color="#000" />
               </TouchableOpacity>
+              <DateModal
+                showDatePicker={this.state.showDatePicker}
+                onDateChange={(iosSelectedDate) => this.setState({iosSelectedDate, selectedDate: formatDate(iosSelectedDate)})}
+                onClose={() => this.setState({ showDatePicker: false }, this.fetchForexRates.bind(this))}
+              />
             </View>
             {(!this.state.loading && this.state.forExRates.rates) ? 
               <ScrollView style={styles.countriesView}>
@@ -248,9 +274,10 @@ function formatDate(date) {
 const styles = {
   viewStyle: {
     flex: 1,
+    marginTop: Platform.OS === 'ios' ? 20 : 0
   },
   baseView: {
-    flex: 0.13,
+    flex: Platform.OS === 'ios' ? 0.10 : 0.13,
     justifyContent: 'space-around',
     backgroundColor: '#2363c3',
     flexDirection: 'row'
@@ -266,14 +293,19 @@ const styles = {
     borderTopWidth: 1,
     borderColor: '#fff',
   },
+  pickerIosStyle: {
+    width: Dimensions.get('window').width/2.5,
+    height: Dimensions.get('window').height/9,
+    color: '#fff'
+  },
   countriesView: {
     flex: 0.8,
     backgroundColor: '#fff'
   },
   baseTextStyles: {
     fontSize: 16,
-    color: '#000',
-    fontFamily: 'Roboto-BoldItalic'
+    color: '#fff',
+    marginTop: 18
   },
   imageStyle: {
     width: 35,
@@ -299,5 +331,15 @@ const styles = {
   flagStyle: {
     width: 50, 
     height: 50
+  },
+  dateContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  containerStyle: {
+    padding: 5,
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'flex-end'
   }
 }
